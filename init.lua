@@ -41,18 +41,18 @@ local layouts = {
     func = function(index, win)
       if (#hs.screen.allScreens() > 1) then
         win:moveToScreen(hs.screen.get("DELL E2310H"))
-        win:fullscreenAlmostCenter()
+        hs.window.fullscreenAlmostCenter(win)
       else
         win:maximize()
       end
     end
   },
   {
-    name = {"Calendar", "Evernote", "Preview"},
+    name = {"Calendar", "Evernote"},
     func = function(index, win)
       if (#hs.screen.allScreens() > 1) then
         win:moveToScreen(hs.screen.get("DELL E2310H"))
-        win:fullscreenCenter()
+        hs.window.fullscreenCenter(win)
       else
         win:maximize()
       end
@@ -63,7 +63,11 @@ local layouts = {
     func = function(index, win)
       if (#hs.screen.allScreens() > 1) then
         win:moveToScreen(hs.screen.get("DELL E2310H"))
-        win:fullscreenWidth()
+        hs.alert.show("win:title()")
+
+        hs.window.fullscreenWidth(win)
+        hs.alert.show("win:title()")
+
       else
         win:maximize()
       end
@@ -163,12 +167,12 @@ function config()
 
   hs.hotkey.bind(cmd_alt, "c", function()
     local win = hs.window.focusedWindow()
-    win:fullscreenCenter()
+    hs.window.fullscreenCenter(win)
   end)
 
   hs.hotkey.bind(cmd_alt_ctrl, "c", function()
     local win = hs.window.focusedWindow()
-    win:fullscreenAlmostCenter()
+    hs.window.fullscreenAlmostCenter(win)
   end)
 
   hs.hotkey.bind(cmd_alt, "f", function()
@@ -179,7 +183,7 @@ function config()
   hs.hotkey.bind(cmd_alt_ctrl, "f", function()
     local win = hs.window.focusedWindow()
     if (win) then
-      win:fullscreenWidth()
+      hs.window.fullscreenWidth(win)
     end
   end)
 
@@ -384,8 +388,8 @@ end
 -- and dock sizes
 function hs.screen.minFrame(refScreen, isFullscreen)
   return {
-    x = refScreen:minX(),
-    y = refScreen:minY(),
+    x = hs.screen.minX(refScreen),
+    y = hs.screen.minY(refScreen),
     w = hs.screen.minWidth(isFullscreen),
     h = hs.screen.minHeight(isFullscreen)
   }
@@ -397,7 +401,7 @@ end
 -- |        |        |
 -- +-----------------+
 function hs.window.right(win)
-  local minFrame = win:screen():minFrame(false)
+  local minFrame = hs.screen.minFrame(win:screen(), false)
   minFrame.x = minFrame.x + (minFrame.w/2)
   minFrame.w = minFrame.w/2
   win:setFrame(minFrame)
@@ -420,7 +424,7 @@ end
 -- |                 |
 -- +-----------------+
 function hs.window.up(win)
-  local minFrame = win:screen():minFrame(false)
+  local minFrame = hs.screen.minFrame(win:screen(), false)
   minFrame.h = minFrame.h/2
   win:setFrame(minFrame)
 end
@@ -431,7 +435,7 @@ end
 -- |      HERE       |
 -- +-----------------+
 function hs.window.down(win)
-  local minFrame = win:screen():minFrame(false)
+  local minFrame = hs.screen.minFrame(win:screen(), false)
   minFrame.y = minFrame.y + minFrame.h/2
   minFrame.h = minFrame.h/2
   win:setFrame(minFrame)
@@ -443,7 +447,7 @@ end
 -- |                 |
 -- +-----------------+
 function hs.window.upLeft(win)
-  local minFrame = win:screen():minFrame(false)
+  local minFrame = hs.screen.minFrame(win:screen(), false)
   minFrame.w = minFrame.w/2
   minFrame.h = minFrame.h/2
   win:setFrame(minFrame)
@@ -455,7 +459,7 @@ end
 -- |  HERE  |        |
 -- +-----------------+
 function hs.window.downLeft(win)
-  local minFrame = win:screen():minFrame(false)
+  local minFrame = hs.screen.minFrame(win:screen(), false)
   win:setFrame({
     x = minFrame.x,
     y = minFrame.y + minFrame.h/2,
@@ -470,7 +474,7 @@ end
 -- |        |  HERE  |
 -- +-----------------+
 function hs.window.downRight(win)
-  local minFrame = win:screen():minFrame(false)
+  local minFrame = hs.screen.minFrame(win:screen(), false)
   win:setFrame({
     x = minFrame.x + minFrame.w/2,
     y = minFrame.y + minFrame.h/2,
@@ -485,7 +489,7 @@ end
 -- |                 |
 -- +-----------------+
 function hs.window.upRight(win)
-  local minFrame = win:screen():minFrame(false)
+  local minFrame = hs.screen.minFrame(win:screen(), false)
   win:setFrame({
     x = minFrame.x + minFrame.w/2,
     y = minFrame.y,
@@ -504,7 +508,7 @@ end
 -- Where the window's size is equal to
 -- the smaller available screen size
 function hs.window.fullscreenCenter(win)
-  local minFrame = win:screen():minFrame(false)
+  local minFrame = hs.screen.minFrame(win:screen(), false)
   win:setFrame(minFrame)
 end
 
@@ -516,10 +520,10 @@ end
 -- |                  |
 -- +------------------+
 function hs.window.fullscreenAlmostCenter(win)
-  local offsetW = win:screen():minX() - win:screen():almostMinX()
+  local offsetW = hs.screen.minX(win:screen()) - hs.screen.almostMinX(win:screen())
   win:setFrame({
-    x = win:screen():almostMinX(),
-    y = win:screen():minY(),
+    x = hs.screen.almostMinX(win:screen()),
+    y = hs.screen.minY(win:screen()),
     w = hs.screen.minWidth(isFullscreen) + (2 * offsetW),
     h = hs.screen.minHeight(isFullscreen)
   })
@@ -534,7 +538,7 @@ end
 -- |                  |
 -- +------------------+
 function hs.window.fullscreenWidth(win)
-  local minFrame = win:screen():minFrame(false)
+  local minFrame = hs.screen.minFrame(win:screen(), false)
   win:setFrame({
     x = win:screen():frame().x,
     y = minFrame.y,
