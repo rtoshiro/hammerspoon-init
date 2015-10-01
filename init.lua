@@ -9,7 +9,8 @@
 --------------------------------------------------------------------------------
 local cmd_alt = {"cmd", "alt"}
 local cmd_alt_ctrl = {"cmd", "alt", "ctrl"}
-
+local main_monitor = "Color LCD"
+local second_monitor = "DELL E2310H"
 
 --------------------------------------------------------------------------------
 -- CONFIGURATIONS
@@ -32,7 +33,7 @@ local layouts = {
   {
     name = {"Airmail", "Calendar", "Firefox", "iTunes", "Last.fm Scrobbler", "Messages", "Skype", "Dash", "Yummy FTP"},
     func = function(index, win)
-      win:moveToScreen(hs.screen.get("Color LCD"))
+      win:moveToScreen(hs.screen.get(main_monitor))
       win:maximize()
     end
   },
@@ -40,7 +41,7 @@ local layouts = {
     name = {"TextWrangler"},
     func = function(index, win)
       if (#hs.screen.allScreens() > 1) then
-        win:moveToScreen(hs.screen.get("DELL E2310H"))
+        win:moveToScreen(hs.screen.get(second_monitor))
         hs.window.fullscreenAlmostCenter(win)
       else
         win:maximize()
@@ -51,7 +52,7 @@ local layouts = {
     name = {"Cocoa Rest Client", "MacDown"},
     func = function(index, win)
       if (#hs.screen.allScreens() > 1) then
-        win:moveToScreen(hs.screen.get("DELL E2310H"))
+        win:moveToScreen(hs.screen.get(second_monitor))
         hs.window.fullscreenCenter(win)
       else
         win:maximize()
@@ -62,7 +63,7 @@ local layouts = {
     name = {"Evernote", "JSON Accelerator", "Preview", "Slack"},
     func = function(index, win)
       if (#hs.screen.allScreens() > 1) then
-        win:moveToScreen(hs.screen.get("DELL E2310H"))
+        win:moveToScreen(hs.screen.get(second_monitor))
         hs.window.fullscreenCenter(win)
       else
         win:maximize()
@@ -73,9 +74,8 @@ local layouts = {
     name = {"Android Studio", "Xcode"},
     func = function(index, win)
       if (#hs.screen.allScreens() > 1) then
-        win:moveToScreen(hs.screen.get("DELL E2310H"))
+        win:moveToScreen(hs.screen.get(second_monitor))
         hs.window.fullscreenWidth(win)
-
       else
         win:maximize()
       end
@@ -87,42 +87,42 @@ local layouts = {
 
       if (index == 1) then
         if (#hs.screen.allScreens() > 1) then
-          win:moveToScreen(hs.screen.get("DELL E2310H"))
+          win:moveToScreen(hs.screen.get(second_monitor))
         end
 
         win:upLeft()
       elseif (index == 2) then
         if (#hs.screen.allScreens() > 1) then
-          win:moveToScreen(hs.screen.get("DELL E2310H"))
+          win:moveToScreen(hs.screen.get(second_monitor))
         end
 
         win:downLeft()
       elseif (index == 3) then
         if (#hs.screen.allScreens() > 1) then
-          win:moveToScreen(hs.screen.get("DELL E2310H"))
+          win:moveToScreen(hs.screen.get(second_monitor))
         end
 
         win:downRight()
       elseif (index == 4) then
         if (#hs.screen.allScreens() > 1) then
-          win:moveToScreen(hs.screen.get("DELL E2310H"))
+          win:moveToScreen(hs.screen.get(second_monitor))
         end
 
         win:upRight()
       elseif (index == 5) then
-        win:moveToScreen(hs.screen.get("Color LCD"))
+        win:moveToScreen(hs.screen.get(main_monitor))
 
         win:upLeft()
       elseif (index == 6) then
-        win:moveToScreen(hs.screen.get("Color LCD"))
+        win:moveToScreen(hs.screen.get(main_monitor))
 
         win:downLeft()
       elseif (index == 7) then
-        win:moveToScreen(hs.screen.get("Color LCD"))
+        win:moveToScreen(hs.screen.get(main_monitor))
 
         win:downRight()
       elseif (index == 8) then
-        win:moveToScreen(hs.screen.get("Color LCD"))
+        win:moveToScreen(hs.screen.get(main_monitor))
 
         win:upRight()
       else
@@ -134,7 +134,7 @@ local layouts = {
     name = "iTerm",
     func = function(index, win)
       if (#hs.screen.allScreens() > 1) then
-        win:moveToScreen(hs.screen.get("DELL E2310H"))
+        win:moveToScreen(hs.screen.get(second_monitor))
       end
 
       if (index == 1) then
@@ -148,7 +148,7 @@ local layouts = {
     name = "iOS Simulator",
     func = function(index, win)
       if (#hs.screen.allScreens() > 1) then
-        win:moveToScreen(hs.screen.get("DELL E2310H"))
+        win:moveToScreen(hs.screen.get(second_monitor))
       end
 
       local screen = win:screen()
@@ -163,7 +163,7 @@ local layouts = {
     name = "Genymotion",
     func = function(index, win)
       if (#hs.screen.allScreens() > 1) then
-        win:moveToScreen(hs.screen.get("DELL E2310H"))
+        win:moveToScreen(hs.screen.get(second_monitor))
       end
 
       local screen = win:screen()
@@ -183,7 +183,7 @@ local layouts = {
 
         local allScreens = hs.screen.allScreens()
         for i, screen in ipairs(allScreens) do
-          if screen:name() == "DELL E2310H" then
+          if screen:name() == second_monitor then
             win:moveToScreen(screen)
           end
         end
@@ -272,14 +272,14 @@ function config()
   hs.hotkey.bind(cmd_alt_ctrl, "1", function()
     local win = hs.window.focusedWindow()
     if (win) then
-      win:moveToScreen(hs.screen.get("DELL E2310H"))
+      win:moveToScreen(hs.screen.get(second_monitor))
     end
   end)
 
   hs.hotkey.bind(cmd_alt_ctrl, "2", function()
     local win = hs.window.focusedWindow()
     if (win) then
-      win:moveToScreen(hs.screen.get("Color LCD"))
+      win:moveToScreen(hs.screen.get(main_monitor))
     end
   end)
 
@@ -293,6 +293,7 @@ function config()
   end)
 
   hs.hotkey.bind(cmd_alt_ctrl, "4", function()
+
     local focusedWindow = hs.window.focusedWindow()
     local app = focusedWindow:application()
     if (app) then
@@ -645,8 +646,6 @@ function applicationWatcher(appName, eventType, appObject)
         appObject:selectMenuItem({"Window", "Bring All to Front"})
     elseif (appName == "Finder") then
         appObject:selectMenuItem({"Window", "Bring All to Front"})
-    -- elseif (appName == "Finder") then
-    --     appObject:selectMenuItem({"Window", "Bring All to Front"})
     end
   end
 
