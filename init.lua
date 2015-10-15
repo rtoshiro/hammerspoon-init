@@ -202,6 +202,31 @@ local layouts = {
   },
 }
 
+local closeAll = {
+  "iTunes",
+  "Skype",
+  "Messages",
+  "XCode",
+  "Android Studio",
+  "Simulator",
+  "Word",
+  "Excel",
+  "TextWrangler",
+  "Cocoa Rest Client",
+  "Last.fm",
+  "Preview",
+  "JSON Accelerator",
+  "Yummy FTP"
+}
+
+local openAll = {
+  "iTunes",
+  "Skype",
+  "Messages",
+  "Last.fm"
+}
+
+
 function config()
   hs.hotkey.bind(cmd_alt, "right", function()
     local win = hs.window.focusedWindow()
@@ -286,6 +311,28 @@ function config()
   hs.hotkey.bind(cmd_alt_ctrl, "R", function()
     hs.reload()
     hs.alert.show("Config loaded")
+  end)
+
+  hs.hotkey.bind(cmd_alt_ctrl, "P", function()
+    hs.alert.show("Closing")
+    for i,v in ipairs(closeAll) do
+      local app = hs.application(v)
+      if (app) then
+        if (app.name) then
+          hs.alert.show(app:name())
+        end
+        if (app.kill) then
+        app:kill()
+      end
+      end
+    end
+  end)
+
+  hs.hotkey.bind(cmd_alt_ctrl, "O", function()
+    hs.alert.show("Openning")
+    for i,v in ipairs(openAll) do
+      hs.application.open(v)
+    end
   end)
 
   hs.hotkey.bind(cmd_alt_ctrl, "3", function()
