@@ -31,7 +31,7 @@ hs.window.animationDuration = 0
 --------------------------------------------------------------------------------
 local layouts = {
   {
-    name = {"Airmail", "Calendar", "Firefox", "iTunes", "Last.fm Scrobbler", "Messages", "Skype", "Dash", "Yummy FTP"},
+    name = {"Airmail", "Calendar", "iTunes", "Last.fm Scrobbler", "Messages", "Skype", "Dash", "Yummy FTP"},
     func = function(index, win)
       win:moveToScreen(hs.screen.get(main_monitor))
       win:maximize()
@@ -49,7 +49,7 @@ local layouts = {
     end
   },
   {
-    name = {"Cocoa Rest Client", "MacDown"},
+    name = {"Cocoa Rest Client", "MacDown", "Firefox"},
     func = function(index, win)
       if (#hs.screen.allScreens() > 1) then
         win:moveToScreen(hs.screen.get(second_monitor))
@@ -71,7 +71,7 @@ local layouts = {
     end
   },
   {
-    name = {"Android Studio", "Xcode"},
+    name = {"Android Studio", "Xcode", "SourceTree"},
     func = function(index, win)
       if (#hs.screen.allScreens() > 1) then
         win:moveToScreen(hs.screen.get(second_monitor))
@@ -216,7 +216,11 @@ local closeAll = {
   "Last.fm",
   "Preview",
   "JSON Accelerator",
-  "Yummy FTP"
+  "Yummy FTP",
+  "player",
+  "FileMerge",
+  "Fabric",
+  "Color Picker"
 }
 
 local openAll = {
@@ -331,6 +335,7 @@ function config()
   hs.hotkey.bind(cmd_alt_ctrl, "O", function()
     hs.alert.show("Openning")
     for i,v in ipairs(openAll) do
+      hs.alert.show(v)
       hs.application.open(v)
     end
   end)
@@ -697,9 +702,7 @@ function applicationWatcher(appName, eventType, appObject)
   end
 
   if (eventType == hs.application.watcher.launched) then
-
     os.execute("sleep " .. tonumber(3))
-
     applyLayout(layouts, appObject)
   end
 end
