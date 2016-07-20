@@ -31,7 +31,7 @@ hs.window.animationDuration = 0
 --------------------------------------------------------------------------------
 local layouts = {
   {
-    name = {"Airmail", "Calendar", "iTunes", "Last.fm Scrobbler", "Messages", "Skype", "Dash", "Yummy FTP"},
+    name = {"Airmail", "Mail", "Calendar", "iTunes", "Last.fm Scrobbler", "Messages", "Skype", "Dash"},
     func = function(index, win)
       win:moveToScreen(hs.screen.get(main_monitor))
       win:maximize()
@@ -49,7 +49,7 @@ local layouts = {
     end
   },
   {
-    name = {"Cocoa Rest Client", "MacDown", "Firefox"},
+    name = {"Cocoa Rest Client", "MacDown", "Firefox", "Yummy FTP Pro"},
     func = function(index, win)
       if (#hs.screen.allScreens() > 1) then
         win:moveToScreen(hs.screen.get(second_monitor))
@@ -60,7 +60,7 @@ local layouts = {
     end
   },
   {
-    name = {"Evernote", "JSON Accelerator", "Preview", "Slack"},
+    name = {"Evernote", "JSON Accelerator", "Preview", "Slack", "Franz"},
     func = function(index, win)
       if (#hs.screen.allScreens() > 1) then
         win:moveToScreen(hs.screen.get(second_monitor))
@@ -71,7 +71,7 @@ local layouts = {
     end
   },
   {
-    name = {"Android Studio", "Xcode", "SourceTree"},
+    name = {"Xcode", "SourceTree", "Sequel Pro", "Android Studio"},
     func = function(index, win)
       if (#hs.screen.allScreens() > 1) then
         win:moveToScreen(hs.screen.get(second_monitor))
@@ -131,7 +131,7 @@ local layouts = {
     end
   },
   {
-    name = "iTerm",
+    name = "iTerm2",
     func = function(index, win)
       if (#hs.screen.allScreens() > 1) then
         win:moveToScreen(hs.screen.get(second_monitor))
@@ -160,19 +160,42 @@ local layouts = {
     end
   },
   {
-    name = "Genymotion",
+    name = {"player"},
+    func = function(index, win)
+      if (#hs.screen.allScreens() > 1) then
+        win:moveToScreen(hs.screen.get(second_monitor))
+      end
+      
+      local minFrame = hs.screen.minFrame(win:screen(), false)
+      local screen = win:screen()
+      local screen_frame = screen:frame()
+      local frame = win:frame()
+      if (index % 3 == 0) then
+        frame.x = screen_frame.w - 200
+        frame.y = (math.floor(index / 3) - 1) * (screen_frame.h / 2)
+        frame.w = 260
+        frame.h = screen_frame.h / 2
+      end
+
+
+      win:setFrame(frame)
+    end
+  },
+  {
+    name = {"_Android Studio"},
     func = function(index, win)
       if (#hs.screen.allScreens() > 1) then
         win:moveToScreen(hs.screen.get(second_monitor))
       end
 
+      local minFrame = hs.screen.minFrame(win:screen(), false)
       local screen = win:screen()
       local screen_frame = screen:frame()
       local frame = win:frame()
-      frame.x = screen_frame.w / 2
-      frame.y = screen_frame.y + 50
-      frame.w = screen_frame.w / 3
-      frame.h = screen_frame.h / 2
+      frame.x = win:screen():frame().x
+      frame.y = minFrame.y
+      frame.w = win:screen():frame().w - 260
+      frame.h = minFrame.h
       win:setFrame(frame)
     end
   },
@@ -216,18 +239,26 @@ local closeAll = {
   "Last.fm",
   "Preview",
   "JSON Accelerator",
-  "Yummy FTP",
+  "Yummy FTP Pro",
   "player",
   "FileMerge",
   "Fabric",
-  "Color Picker"
+  "Color Picker",
+  "Dash",
+  "Genymotion"
 }
 
 local openAll = {
   "iTunes",
   "Skype",
   "Messages",
-  "Last.fm"
+  "Last.fm",
+  "Dash"
+}
+
+newWindowWatcher = {
+  "Sequel Pro",
+  "SourceTree",
 }
 
 
@@ -309,12 +340,19 @@ function config()
     local win = hs.window.focusedWindow()
     if (win) then
       win:moveToScreen(hs.screen.get(main_monitor))
+      win:maximize()
     end
   end)
 
   hs.hotkey.bind(cmd_alt_ctrl, "R", function()
     hs.reload()
     hs.alert.show("Config loaded")
+--
+--local win = hs.window.focusedWindow()
+--    local app = win:application()
+--
+--          hs.alert.show(app:title())
+--          
   end)
 
   hs.hotkey.bind(cmd_alt_ctrl, "P", function()
@@ -372,10 +410,13 @@ end
 function applyLayout(layouts, app)
   if (app) then
     local appName = app:title()
+
     for i, layout in ipairs(layouts) do
       if (type(layout.name) == "table") then
         for i, layAppName in ipairs(layout.name) do
           if (layAppName == appName) then
+            hs.alert.show(appName)
+          
             local wins = app:allWindows()
             local counter = 1
             for j, win in ipairs(wins) do
@@ -406,7 +447,9 @@ function applyLayouts(layouts)
   for i, layout in ipairs(layouts) do
     if (type(layout.name) == "table") then
       for i, appName in ipairs(layout.name) do
-        local app = hs.appfinder.appFromName(appName)
+--        local app = hs.appfinder.appFromName(appName)
+        local app = hs.application.find(appName)
+--      hs.alert.show(app:title())
         if (app) then
           local wins = app:allWindows()
           local counter = 1
@@ -692,21 +735,56 @@ function hs.window.fullscreenWidth(win)
   })
 end
 
+windowWatcher = {}
+
+function windowWatcherListener(element, event, watcher, userData) 
+  local appName = userData.name
+  local app = hs.application.find(appName)
+  if (app) then
+    applyLayout(layouts, app)
+  end
+end
+
 function applicationWatcher(appName, eventType, appObject)
   if (eventType == hs.application.watcher.activated) then
     if (appName == "iTerm") then
-        appObject:selectMenuItem({"Window", "Bring All to Front"})
+      appObject:selectMenuItem({"Window", "Bring All to Front"})
     elseif (appName == "Finder") then
-        appObject:selectMenuItem({"Window", "Bring All to Front"})
+      appObject:selectMenuItem({"Window", "Bring All to Front"})
     end
   end
 
   if (eventType == hs.application.watcher.launched) then
-    os.execute("sleep " .. tonumber(3))
+    os.execute("sleep " .. tonumber(1))
     applyLayout(layouts, appObject)
+    
+    for i, aname in ipairs(newWindowWatcher) do
+      if (appName == aname) then      
+        if (not windowWatcher[aname]) then
+          hs.alert.show("Watching " .. appName)
+          windowWatcher[aname] = appObject:newWatcher(windowWatcherListener, { name = appName })
+          windowWatcher[aname]:start({hs.uielement.watcher.windowCreated})
+        end
+      end
+    end
+  end
+  
+  if (eventType == hs.application.watcher.terminated) then  
+    for i, aname in ipairs(newWindowWatcher) do
+      if (appName == aname) then      
+        if (windowWatcher[aname]) then
+          hs.alert.show("Stop watching " .. appName)
+          windowWatcher[aname]:stop()
+          windowWatcher[aname] = nil
+        end
+      end
+    end
   end
 end
 
+
 config()
-local appWatcher = hs.application.watcher.new(applicationWatcher)
+appWatcher = hs.application.watcher.new(applicationWatcher)
 appWatcher:start()
+
+
