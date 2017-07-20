@@ -2,7 +2,7 @@
 
 I'm not going to explain what is **Hammerspoon** or teach you Lua.
 
-I'll just explain how to use my "init.lua" file, if you don't want spending time on it.
+I'll just explain how to use my "init.lua" file, if you don't want spend time on it.
 
 # Download
 
@@ -45,7 +45,7 @@ Open ```init.lua``` file and edit lines 12 and 13 with the name of your first an
 
 You can configure the variable "layouts" (line 32) according your monitor configuration.
 
-### The sintax is:
+### The syntax is:
 
 ```
   {
