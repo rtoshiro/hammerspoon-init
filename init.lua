@@ -10,7 +10,7 @@
 local cmd_alt = {"cmd", "alt"}
 local cmd_alt_ctrl = {"cmd", "alt", "ctrl"}
 local main_monitor = "Color LCD"
-local second_monitor = "DELL E2310H"
+local second_monitor = "DELL P2217H"
 
 --------------------------------------------------------------------------------
 -- CONFIGURATIONS
@@ -31,7 +31,7 @@ hs.window.animationDuration = 0
 --------------------------------------------------------------------------------
 local layouts = {
   {
-    name = {"Airmail", "Mail", "Calendar", "iTunes", "Last.fm Scrobbler", "Messages", "Skype", "Dash"},
+    name = {"Airmail", "Mail", "Calendar", "iTunes", "Last.fm Scrobbler", "Messages", "Skype", "Dash", "Firefox", "Postman", "Franz"},
     func = function(index, win)
       win:moveToScreen(hs.screen.get(main_monitor))
       win:maximize()
@@ -49,7 +49,7 @@ local layouts = {
     end
   },
   {
-    name = {"Cocoa Rest Client", "MacDown", "Firefox", "Yummy FTP Pro"},
+    name = {"Cocoa Rest Client", "MacDown", "Yummy FTP Pro"},
     func = function(index, win)
       if (#hs.screen.allScreens() > 1) then
         win:moveToScreen(hs.screen.get(second_monitor))
@@ -60,7 +60,7 @@ local layouts = {
     end
   },
   {
-    name = {"Evernote", "JSON Accelerator", "Preview", "Slack", "Franz"},
+    name = {"Evernote", "JSON Accelerator", "Preview", "Slack"},
     func = function(index, win)
       if (#hs.screen.allScreens() > 1) then
         win:moveToScreen(hs.screen.get(second_monitor))
@@ -90,41 +90,41 @@ local layouts = {
           win:moveToScreen(hs.screen.get(second_monitor))
         end
 
-        win:upLeft()
+        hs.window.upLeft(win)
       elseif (index == 2) then
         if (#hs.screen.allScreens() > 1) then
           win:moveToScreen(hs.screen.get(second_monitor))
         end
 
-        win:downLeft()
+        hs.window.downLeft(win)
       elseif (index == 3) then
         if (#hs.screen.allScreens() > 1) then
           win:moveToScreen(hs.screen.get(second_monitor))
         end
 
-        win:downRight()
+        hs.window.downRight(win)
       elseif (index == 4) then
         if (#hs.screen.allScreens() > 1) then
           win:moveToScreen(hs.screen.get(second_monitor))
         end
 
-        win:upRight()
+        hs.window.upRight(win)
       elseif (index == 5) then
         win:moveToScreen(hs.screen.get(main_monitor))
 
-        win:upLeft()
+        hs.window.upLeft(win)
       elseif (index == 6) then
         win:moveToScreen(hs.screen.get(main_monitor))
 
-        win:downLeft()
+        hs.window.downLeft(win)
       elseif (index == 7) then
         win:moveToScreen(hs.screen.get(main_monitor))
 
-        win:downRight()
+        hs.window.downRight(win)
       elseif (index == 8) then
         win:moveToScreen(hs.screen.get(main_monitor))
 
-        win:upRight()
+        hs.window.upRight(win)
       else
         win:close()
       end
@@ -138,9 +138,13 @@ local layouts = {
       end
 
       if (index == 1) then
-        win:left()
+        hs.window.upLeft(win)
       elseif (index == 2) then
-        win:right()
+        hs.window.upRight(win)
+      elseif (index == 3) then
+        hs.window.downLeft(win)
+      elseif (index == 4) then
+        hs.window.downRight(win)
       end
     end
   },
@@ -265,42 +269,42 @@ newWindowWatcher = {
 function config()
   hs.hotkey.bind(cmd_alt, "right", function()
     local win = hs.window.focusedWindow()
-    win:right()
+    hs.window.right(win)
   end)
 
   hs.hotkey.bind(cmd_alt, "left", function()
     local win = hs.window.focusedWindow()
-    win:left()
+    hs.window.left(win)
   end)
 
   hs.hotkey.bind(cmd_alt, "up", function()
     local win = hs.window.focusedWindow()
-    win:up()
+    hs.window.up(win)
   end)
 
   hs.hotkey.bind(cmd_alt, "down", function()
     local win = hs.window.focusedWindow()
-    win:down()
+    hs.window.down(win)
   end)
 
   hs.hotkey.bind(cmd_alt_ctrl, "left", function()
     local win = hs.window.focusedWindow()
-    win:upLeft()
+    hs.window.upLeft(win)
   end)
 
   hs.hotkey.bind(cmd_alt_ctrl, "down", function()
     local win = hs.window.focusedWindow()
-    win:downLeft()
+    hs.window.downLeft(win)
   end)
 
   hs.hotkey.bind(cmd_alt_ctrl, "right", function()
     local win = hs.window.focusedWindow()
-    win:downRight()
+    hs.window.downRight(win)
   end)
 
   hs.hotkey.bind(cmd_alt_ctrl, "up", function()
     local win = hs.window.focusedWindow()
-    win:upRight()
+    hs.window.upRight(win)
   end)
 
   hs.hotkey.bind(cmd_alt, "c", function()
@@ -575,12 +579,13 @@ end
 -- isFullscreen = false removes the toolbar
 -- and dock sizes
 function hs.screen.minFrame(refScreen, isFullscreen)
-  return {
+  local result = {
     x = hs.screen.minX(refScreen),
     y = hs.screen.minY(refScreen),
     w = hs.screen.minWidth(isFullscreen),
     h = hs.screen.minHeight(isFullscreen)
   }
+  return result
 end
 
 -- +-----------------+
